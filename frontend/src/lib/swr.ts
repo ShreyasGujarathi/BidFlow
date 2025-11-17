@@ -3,6 +3,11 @@ import { API_BASE_URL } from './api';
 
 // SWR fetcher function
 const fetcher = async (url: string, token?: string) => {
+  // Ensure API_BASE_URL is available
+  if (!API_BASE_URL) {
+    throw new Error('API_BASE_URL is not configured. Please set NEXT_PUBLIC_API_BASE_URL environment variable.');
+  }
+
   const headers: HeadersInit = {
     'Content-Type': 'application/json',
   };
@@ -11,18 +16,26 @@ const fetcher = async (url: string, token?: string) => {
     headers.Authorization = `Bearer ${token}`;
   }
 
-  const response = await fetch(`${API_BASE_URL}${url}`, {
-    headers,
-    credentials: 'include',
-  });
+  try {
+    const response = await fetch(`${API_BASE_URL}${url}`, {
+      headers,
+      credentials: 'include',
+    });
 
-  if (!response.ok) {
-    const error = new Error('An error occurred while fetching the data.');
+    if (!response.ok) {
+      const error = new Error(`Failed to fetch: ${response.status} ${response.statusText}`);
+      throw error;
+    }
+
+    const data = await response.json();
+    return data.success ? data.data : data;
+  } catch (error) {
+    // Re-throw with more context if it's a network error
+    if (error instanceof TypeError && error.message === 'Failed to fetch') {
+      throw new Error(`Unable to connect to API at ${API_BASE_URL}. Please check your NEXT_PUBLIC_API_BASE_URL environment variable.`);
+    }
     throw error;
   }
-
-  const data = await response.json();
-  return data.success ? data.data : data;
 };
 
 // Custom hooks for API endpoints
