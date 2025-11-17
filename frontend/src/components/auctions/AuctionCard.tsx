@@ -62,11 +62,13 @@ export const AuctionCard = ({ auction }: AuctionCardProps) => {
   if (typeof auction.seller === "object" && auction.seller !== null) {
     const sellerObj = auction.seller as { _id?: string | { toString?: () => string }; id?: string; [key: string]: unknown };
     if (sellerObj._id) {
-      sellerId = typeof sellerObj._id === "string" 
-        ? sellerObj._id 
-        : typeof sellerObj._id === "object" && sellerObj._id !== null && "toString" in sellerObj._id
-          ? sellerObj._id.toString()
-          : String(sellerObj._id);
+      if (typeof sellerObj._id === "string") {
+        sellerId = sellerObj._id;
+      } else if (typeof sellerObj._id === "object" && sellerObj._id !== null && "toString" in sellerObj._id && typeof sellerObj._id.toString === "function") {
+        sellerId = sellerObj._id.toString();
+      } else {
+        sellerId = String(sellerObj._id);
+      }
     } else if (sellerObj.id) {
       sellerId = String(sellerObj.id);
     }
