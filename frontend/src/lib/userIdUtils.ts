@@ -1,9 +1,13 @@
-import { UserIdReference } from "./types";
-
 /**
- * Safely extracts user ID from various formats (string, object with _id, object with id)
+ * Safely extracts user ID from various formats:
+ * - string: returns the string directly
+ * - { _id: string }: returns the _id value
+ * - { id: string }: returns the id value (for User type or objects with id field)
+ * - null | undefined: returns undefined
  */
-export const extractUserId = (user: string | UserIdReference | null | undefined): string | undefined => {
+export const extractUserId = (
+  user: string | { _id: string } | { id: string } | { id?: string; [key: string]: unknown } | null | undefined
+): string | undefined => {
   if (!user) return undefined;
   
   if (typeof user === "string") {
@@ -11,20 +15,13 @@ export const extractUserId = (user: string | UserIdReference | null | undefined)
   }
   
   if (typeof user === "object" && user !== null) {
-    // Try _id first
-    if (user._id) {
-      if (typeof user._id === "string") {
-        return user._id;
-      } else if (typeof user._id === "object" && user._id !== null && "toString" in user._id && typeof user._id.toString === "function") {
-        return user._id.toString();
-      } else {
-        return String(user._id);
-      }
+    // Handle { _id: string }
+    if ("_id" in user && typeof user._id === "string") {
+      return user._id;
     }
-    
-    // Fallback to id
-    if (user.id) {
-      return String(user.id);
+    // Handle { id: string } (for User type or objects with id field)
+    if ("id" in user && typeof user.id === "string") {
+      return user.id;
     }
   }
   

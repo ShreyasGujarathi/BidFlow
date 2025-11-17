@@ -32,7 +32,7 @@ export interface Auction {
   minimumIncrement: number;
   currentPrice: number;
   currentBidder?: string | User;
-  seller: User;
+  seller: string | { _id: string };
   status: AuctionStatus;
   startTime: string;
   endTime: string;
