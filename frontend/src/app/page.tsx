@@ -102,9 +102,9 @@ export default function HomePage() {
   useEffect(() => {
     if (!joinedRoomsKey) return;
     const auctionIds = joinedRoomsKey.split("|").filter(Boolean);
-    auctionIds.forEach((id) => joinAuction(id));
+    auctionIds.forEach((id: string) => joinAuction(id));
     return () => {
-      auctionIds.forEach((id) => leaveAuction(id));
+      auctionIds.forEach((id: string) => leaveAuction(id));
     };
   }, [joinedRoomsKey, joinAuction, leaveAuction]);
 
