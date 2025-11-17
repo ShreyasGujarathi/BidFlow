@@ -56,10 +56,10 @@ export default function HomePage() {
         }
         // If auction should be removed (completed or ended), filter it out
         if (shouldRemove) {
-          return current.filter((auction) => auction._id !== updated._id);
+          return current.filter((auction: Auction) => auction._id !== updated._id);
         }
         // Otherwise update it
-        return current.map((auction) =>
+        return current.map((auction: Auction) =>
           auction._id === updated._id ? { ...auction, ...updated } : auction
         );
       }, false);
@@ -73,7 +73,7 @@ export default function HomePage() {
       // Remove finalized auction from the list
       mutate(url, (current: Auction[] | undefined) => {
         if (!current) return current;
-        return current.filter((auction) => auction._id !== payload.auctionId);
+        return current.filter((auction: Auction) => auction._id !== payload.auctionId);
       }, false);
     };
 
@@ -89,11 +89,11 @@ export default function HomePage() {
     () => {
       const now = new Date();
       return auctions
-        .filter((auction) => {
+        .filter((auction: Auction) => {
           const endTime = new Date(auction.endTime);
           return auction.status === "live" && endTime > now;
         })
-        .map((auction) => auction._id)
+        .map((auction: Auction) => auction._id)
         .join("|");
     },
     [auctions]
@@ -108,7 +108,7 @@ export default function HomePage() {
     };
   }, [joinedRoomsKey, joinAuction, leaveAuction]);
 
-  const filteredAuctions = auctions.filter((auction) => {
+  const filteredAuctions = auctions.filter((auction: Auction) => {
     const now = new Date();
     const endTime = new Date(auction.endTime);
     return auction.status === "live" && endTime > now;
