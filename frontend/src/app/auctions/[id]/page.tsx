@@ -88,11 +88,13 @@ export default function AuctionDetailPage() {
     if (typeof auction.currentBidder === "object" && auction.currentBidder !== null) {
       const bidderObj = auction.currentBidder as { _id?: string | { toString?: () => string }; id?: string; [key: string]: unknown };
       if (bidderObj._id) {
-        winnerId = typeof bidderObj._id === "string" 
-          ? bidderObj._id 
-          : typeof bidderObj._id === "object" && bidderObj._id !== null && "toString" in bidderObj._id
-            ? bidderObj._id.toString()
-            : String(bidderObj._id);
+        if (typeof bidderObj._id === "string") {
+          winnerId = bidderObj._id;
+        } else if (typeof bidderObj._id === "object" && bidderObj._id !== null && "toString" in bidderObj._id && typeof bidderObj._id.toString === "function") {
+          winnerId = bidderObj._id.toString();
+        } else {
+          winnerId = String(bidderObj._id);
+        }
       } else if (bidderObj.id) {
         winnerId = String(bidderObj.id);
       }

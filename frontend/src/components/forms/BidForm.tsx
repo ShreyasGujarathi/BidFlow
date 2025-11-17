@@ -73,11 +73,13 @@ export const BidForm = ({
       const bidderObj = currentBidder as { _id?: string | { toString?: () => string }; id?: string; [key: string]: unknown };
       if (bidderObj._id) {
         // Handle both string and ObjectId-like objects
-        bidderId = typeof bidderObj._id === "string" 
-          ? bidderObj._id 
-          : typeof bidderObj._id === "object" && bidderObj._id !== null && "toString" in bidderObj._id
-            ? bidderObj._id.toString()
-            : String(bidderObj._id);
+        if (typeof bidderObj._id === "string") {
+          bidderId = bidderObj._id;
+        } else if (typeof bidderObj._id === "object" && bidderObj._id !== null && "toString" in bidderObj._id && typeof bidderObj._id.toString === "function") {
+          bidderId = bidderObj._id.toString();
+        } else {
+          bidderId = String(bidderObj._id);
+        }
       } else if (bidderObj.id) {
         bidderId = String(bidderObj.id);
       }
