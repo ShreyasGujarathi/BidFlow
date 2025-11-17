@@ -189,13 +189,12 @@ export const markNotificationsAsRead = (token: string, ids?: string[]) =>
     token
   );
 
+// Admin metrics type - matches AdminDashboard
+type AdminMetrics = Record<"liveAuctions" | "totalUsers" | "bidsInLast24h", number>;
+
 export const fetchAdminOverview = (token: string) =>
   apiFetch<{
-    metrics: {
-      liveAuctions: number;
-      totalUsers: number;
-      bidsInLast24h: number;
-    };
+    metrics: AdminMetrics;
     recentAuctions: Auction[];
   }>("/api/admin/overview", undefined, token);
 

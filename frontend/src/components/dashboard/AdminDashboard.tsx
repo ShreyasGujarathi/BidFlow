@@ -3,16 +3,22 @@
 import { Auction } from "../../lib/types";
 import { format } from "date-fns";
 
+// Define the valid keys for metrics
+type MetricsKey = "liveAuctions" | "totalUsers" | "bidsInLast24h";
+
 interface AdminDashboardProps {
-  metrics: {
-    liveAuctions: number;
-    totalUsers: number;
-    bidsInLast24h: number;
-  };
+  metrics: Record<MetricsKey, number>;
   recentAuctions: Auction[];
 }
 
-const metricCards = [
+// Define the metric card structure with proper typing
+interface MetricCard {
+  key: MetricsKey;
+  label: string;
+  color: string;
+}
+
+const metricCards: readonly MetricCard[] = [
   {
     key: "liveAuctions",
     label: "Live Auctions",
@@ -37,7 +43,7 @@ export const AdminDashboard = ({
   return (
     <div className="space-y-8">
       <section className="grid gap-4 md:grid-cols-3">
-        {metricCards.map((metric: { key: string; label: string; color: string }) => (
+        {metricCards.map((metric: MetricCard) => (
           <div
             key={metric.key}
             className="rounded-2xl border p-5 shadow-lg"

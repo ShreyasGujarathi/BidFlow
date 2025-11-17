@@ -11,11 +11,7 @@ export default function AdminPage() {
   const { user, token, loading } = useAuth();
   const router = useRouter();
   const [data, setData] = useState<{
-    metrics: {
-      liveAuctions: number;
-      totalUsers: number;
-      bidsInLast24h: number;
-    };
+    metrics: Record<"liveAuctions" | "totalUsers" | "bidsInLast24h", number>;
     recentAuctions: Auction[];
   } | null>(null);
   const [error, setError] = useState<string | null>(null);
