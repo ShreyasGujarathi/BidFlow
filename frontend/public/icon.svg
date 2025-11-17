@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- Background with rounded square -->
+  <rect width="512" height="512" rx="120" fill="url(#gradient)"/>
+  
+  <!-- Upward trending arrow (bid/price increase symbol) -->
+  <path d="M256 144 L256 368 M208 320 L256 368 L304 320" stroke="white" stroke-width="36" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  
+  <!-- Dollar sign at top -->
+  <text x="256" y="200" font-family="system-ui, -apple-system, sans-serif" font-size="96" font-weight="700" fill="white" text-anchor="middle">$</text>
+  
+  <defs>
+    <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1e3a8a;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#2563eb;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#3b82f6;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+</svg>
+
