@@ -291,7 +291,7 @@ export default function UserProfilePage() {
             {profile.recentAuctions.map((auction: { _id: string; slug: string; [key: string]: unknown }) => (
               <Link
                 key={auction._id}
-                href={getAuctionUrl(auction as { slug: string; _id: string })}
+                href={getAuctionUrl(auction)}
                 prefetch={true}
                 className="group overflow-hidden rounded-lg border transition hover:opacity-80"
                 style={{
@@ -355,7 +355,7 @@ export default function UserProfilePage() {
             {profile.recentWins.map((auction: { _id: string; slug: string; [key: string]: unknown }) => (
               <Link
                 key={auction._id}
-                href={getAuctionUrl(auction as { slug: string; _id: string })}
+                href={getAuctionUrl(auction)}
                 prefetch={true}
                 className="group overflow-hidden rounded-lg border transition hover:opacity-80"
                 style={{

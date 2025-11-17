@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "../../context/AuthContext";
 import { useWalletBalance, useTransactionHistory } from "../../lib/swr";
-import { addFunds } from "../../lib/api";
+import { addFunds, Transaction } from "../../lib/api";
 import { mutate } from "swr";
 import { useSocketContext } from "../../context/SocketContext";
 import { Card, CardContent, CardHeader, CardTitle } from "../../components/ui/card";
@@ -185,7 +185,7 @@ export default function WalletPage() {
             </div>
 
             <div className="flex flex-wrap gap-2">
-              {quickAmounts.map((quickAmount) => (
+              {quickAmounts.map((quickAmount: number) => (
                 <Button
                   key={quickAmount}
                   type="button"
@@ -218,7 +218,7 @@ export default function WalletPage() {
         <CardContent>
           {transactions && transactions.length > 0 ? (
             <div className="space-y-2">
-              {transactions.map((transaction) => (
+              {transactions.map((transaction: Transaction) => (
                 <div
                   key={transaction._id}
                   className="flex items-center justify-between rounded-lg border p-3"

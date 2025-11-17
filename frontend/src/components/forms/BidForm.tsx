@@ -5,6 +5,7 @@ import { placeBid } from "../../lib/api";
 import { useAuth } from "../../context/AuthContext";
 import { useWalletBalance } from "../../lib/swr";
 import { Bid } from "../../lib/types";
+import { extractUserId } from "../../lib/userIdUtils";
 
 interface BidFormProps {
   auctionId: string;
@@ -40,11 +41,11 @@ export const BidForm = ({
     }
 
     const userIdStr = String(user.id).trim();
-    const hasBid = userBidHistory.some((bid) => {
+    const hasBid = userBidHistory.some((bid: Bid) => {
       // bid.bidder is always a User object (populated from backend)
       const bidder = bid.bidder;
       if (typeof bidder === "object" && bidder !== null) {
-        const bidderId = (bidder as { _id?: string; id?: string })._id || (bidder as { _id?: string; id?: string }).id;
+        const bidderId = extractUserId(bidder);
         const bidderIdStr = bidderId ? String(bidderId).trim() : "";
         return bidderIdStr === userIdStr;
       }
@@ -66,26 +67,7 @@ export const BidForm = ({
     }
     
     // Extract bidder ID - handle both object format (with _id or id) and string format
-    let bidderId: string | undefined;
-    if (typeof currentBidder === "object" && currentBidder !== null) {
-      // When populated by Mongoose, the object has _id field (ObjectId)
-      // It might also have id field if it's a User object from frontend
-      const bidderObj = currentBidder as { _id?: string | { toString?: () => string }; id?: string; [key: string]: unknown };
-      if (bidderObj._id) {
-        // Handle both string and ObjectId-like objects
-        if (typeof bidderObj._id === "string") {
-          bidderId = bidderObj._id;
-        } else if (typeof bidderObj._id === "object" && bidderObj._id !== null && "toString" in bidderObj._id && typeof bidderObj._id.toString === "function") {
-          bidderId = bidderObj._id.toString();
-        } else {
-          bidderId = String(bidderObj._id);
-        }
-      } else if (bidderObj.id) {
-        bidderId = String(bidderObj.id);
-      }
-    } else if (typeof currentBidder === "string") {
-      bidderId = currentBidder;
-    }
+    const bidderId = extractUserId(currentBidder);
     
     // Convert both to strings for reliable comparison and normalize
     const userIdStr = String(user.id).trim();
@@ -179,15 +161,15 @@ export const BidForm = ({
       const availableBalance = walletBalance.availableBalance;
       // Calculate incremental amount needed (bidAmount - user's previous highest bid for this auction)
       const userPreviousBid = userBidHistory
-        .filter((bid) => {
+        .filter((bid: Bid) => {
           const bidder = bid.bidder;
           if (typeof bidder === "object" && bidder !== null) {
-            const bidderId = (bidder as { _id?: string; id?: string })._id || (bidder as { _id?: string; id?: string }).id;
-            return String(bidderId).trim() === String(user.id).trim();
+            const bidderId = extractUserId(bidder);
+            return bidderId ? String(bidderId).trim() === String(user.id).trim() : false;
           }
           return false;
         })
-        .sort((a, b) => b.amount - a.amount)[0];
+        .sort((a: Bid, b: Bid) => b.amount - a.amount)[0];
       
       const previousBidAmount = userPreviousBid?.amount || 0;
       const incrementalAmount = bidAmount - previousBidAmount;
@@ -290,15 +272,15 @@ export const BidForm = ({
           if (isNaN(bidAmount)) return null;
           
           const userPreviousBid = userBidHistory
-            .filter((bid) => {
+            .filter((bid: Bid) => {
               const bidder = bid.bidder;
               if (typeof bidder === "object" && bidder !== null) {
-                const bidderId = (bidder as { _id?: string; id?: string })._id || (bidder as { _id?: string; id?: string }).id;
-                return String(bidderId).trim() === String(user?.id).trim();
+                const bidderId = extractUserId(bidder);
+                return bidderId ? String(bidderId).trim() === String(user?.id).trim() : false;
               }
               return false;
             })
-            .sort((a, b) => b.amount - a.amount)[0];
+            .sort((a: Bid, b: Bid) => b.amount - a.amount)[0];
           
           const previousBidAmount = userPreviousBid?.amount || 0;
           const incrementalAmount = bidAmount - previousBidAmount;

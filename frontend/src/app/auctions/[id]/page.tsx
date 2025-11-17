@@ -13,6 +13,7 @@ import { WinnerModal } from "../../../components/common/WinnerModal";
 import { WatchlistButton } from "../../../components/watchlist/WatchlistButton";
 import { useAuctionSubscription } from "../../../hooks/useAuctionSubscription";
 import { useAuth } from "../../../context/AuthContext";
+import { extractUserId } from "../../../lib/userIdUtils";
 import { useSocketContext } from "../../../context/SocketContext";
 import { useAuction, useBidHistory } from "../../../lib/swr";
 import { mutate } from 'swr';
@@ -84,23 +85,7 @@ export default function AuctionDetailPage() {
     }
 
     // Check if current user is the winner
-    let winnerId: string | undefined;
-    if (typeof auction.currentBidder === "object" && auction.currentBidder !== null) {
-      const bidderObj = auction.currentBidder as { _id?: string | { toString?: () => string }; id?: string; [key: string]: unknown };
-      if (bidderObj._id) {
-        if (typeof bidderObj._id === "string") {
-          winnerId = bidderObj._id;
-        } else if (typeof bidderObj._id === "object" && bidderObj._id !== null && "toString" in bidderObj._id && typeof bidderObj._id.toString === "function") {
-          winnerId = bidderObj._id.toString();
-        } else {
-          winnerId = String(bidderObj._id);
-        }
-      } else if (bidderObj.id) {
-        winnerId = String(bidderObj.id);
-      }
-    } else if (typeof auction.currentBidder === "string") {
-      winnerId = auction.currentBidder;
-    }
+    const winnerId = extractUserId(auction.currentBidder);
 
     const userIdStr = String(user.id).trim();
     const winnerIdStr = winnerId ? String(winnerId).trim() : "";
@@ -216,23 +201,7 @@ export default function AuctionDetailPage() {
             {isLive ? (
               (() => {
                 // Check if current user is the seller - handle both _id and id fields
-                let sellerId: string | undefined;
-                if (typeof auction.seller === "object" && auction.seller !== null) {
-                  const sellerObj = auction.seller as { _id?: string | { toString?: () => string }; id?: string; [key: string]: unknown };
-                  if (sellerObj._id) {
-                    if (typeof sellerObj._id === "string") {
-                      sellerId = sellerObj._id;
-                    } else if (typeof sellerObj._id === "object" && sellerObj._id !== null && "toString" in sellerObj._id && typeof sellerObj._id.toString === "function") {
-                      sellerId = sellerObj._id.toString();
-                    } else {
-                      sellerId = String(sellerObj._id);
-                    }
-                  } else if (sellerObj.id) {
-                    sellerId = String(sellerObj.id);
-                  }
-                } else if (typeof auction.seller === "string") {
-                  sellerId = auction.seller;
-                }
+                const sellerId = extractUserId(auction.seller);
                 const isSeller = user && sellerId && String(sellerId).trim() === String(user.id).trim();
                 
                 if (isSeller) {

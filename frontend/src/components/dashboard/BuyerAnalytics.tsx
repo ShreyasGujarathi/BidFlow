@@ -40,18 +40,18 @@ const CATEGORY_COLORS = [
 
 export const BuyerAnalytics = ({ analytics }: BuyerAnalyticsProps) => {
   // Format timelines for charts
-  const biddingData = analytics.biddingTimeline.map((item) => ({
+  const biddingData = analytics.biddingTimeline.map((item: { date: string; count: number }) => ({
     date: format(new Date(item.date), 'MMM d'),
     count: item.count,
   }));
 
-  const spendingData = analytics.spendingTimeline.map((item) => ({
+  const spendingData = analytics.spendingTimeline.map((item: { date: string; amount: number }) => ({
     date: format(new Date(item.date), 'MMM d'),
     amount: item.amount,
   }));
 
   // Category data for pie chart
-  const categoryData = analytics.favoriteCategories.map((cat, index) => ({
+  const categoryData = analytics.favoriteCategories.map((cat: { category: string; count: number }, index: number) => ({
     name: cat.category,
     value: cat.count,
     color: CATEGORY_COLORS[index % CATEGORY_COLORS.length],
@@ -109,7 +109,7 @@ export const BuyerAnalytics = ({ analytics }: BuyerAnalyticsProps) => {
     <div className="space-y-6">
       {/* Metrics Cards */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {metrics.map((metric, index) => (
+        {metrics.map((metric: { label: string; value: string | number; icon: React.ReactNode; color: string; bgColor: string }, index: number) => (
           <div
             key={index}
             className="rounded-2xl border p-6"
@@ -246,7 +246,7 @@ export const BuyerAnalytics = ({ analytics }: BuyerAnalyticsProps) => {
                   fill="#8884d8"
                   dataKey="value"
                 >
-                  {categoryData.map((entry, index) => (
+                  {categoryData.map((entry: { name: string; value: number; color: string }, index: number) => (
                     <Cell key={`cell-${index}`} fill={entry.color} />
                   ))}
                 </Pie>
@@ -261,7 +261,7 @@ export const BuyerAnalytics = ({ analytics }: BuyerAnalyticsProps) => {
               </PieChart>
             </ResponsiveContainer>
             <div className="flex flex-col justify-center gap-3">
-              {categoryData.map((cat, index) => (
+              {categoryData.map((cat: { name: string; value: number; color: string }, index: number) => (
                 <div
                   key={index}
                   className="flex items-center justify-between rounded-lg border p-3"

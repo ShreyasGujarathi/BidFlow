@@ -12,6 +12,7 @@ import { WatchlistButton } from "../watchlist/WatchlistButton";
 import { Card, CardContent } from "../ui/card";
 import { Badge } from "../ui/badge";
 import { cn } from "../../lib/utils";
+import { extractUserId } from "../../lib/userIdUtils";
 
 interface AuctionCardProps {
   auction: Auction;
@@ -58,23 +59,7 @@ export const AuctionCard = ({ auction }: AuctionCardProps) => {
       : undefined;
   
   // Extract seller ID - handle both object format (with _id or id) and string format
-  let sellerId: string | undefined;
-  if (typeof auction.seller === "object" && auction.seller !== null) {
-    const sellerObj = auction.seller as { _id?: string | { toString?: () => string }; id?: string; [key: string]: unknown };
-    if (sellerObj._id) {
-      if (typeof sellerObj._id === "string") {
-        sellerId = sellerObj._id;
-      } else if (typeof sellerObj._id === "object" && sellerObj._id !== null && "toString" in sellerObj._id && typeof sellerObj._id.toString === "function") {
-        sellerId = sellerObj._id.toString();
-      } else {
-        sellerId = String(sellerObj._id);
-      }
-    } else if (sellerObj.id) {
-      sellerId = String(sellerObj.id);
-    }
-  } else if (typeof auction.seller === "string") {
-    sellerId = auction.seller;
-  }
+  const sellerId = extractUserId(auction.seller);
   
   // Compare normalized IDs
   const userIdStr = user?.id ? String(user.id).trim() : "";
@@ -190,10 +175,9 @@ export const AuctionCard = ({ auction }: AuctionCardProps) => {
 
               <div className="flex items-center justify-between text-xs" style={{ color: 'var(--muted-foreground)' }}>
                 <span>Min increment ${auction.minimumIncrement.toFixed(2)}</span>
-                {currentBidderName && typeof auction.currentBidder === "object" && auction.currentBidder ? (
+                {currentBidderName &&                   typeof auction.currentBidder === "object" && auction.currentBidder ? (
                   (() => {
-                    const bidderId = (auction.currentBidder as { id?: string; _id?: string }).id || 
-                                    (auction.currentBidder as { id?: string; _id?: string })._id;
+                    const bidderId = extractUserId(auction.currentBidder);
                     return bidderId ? (
                       <span
                         onClick={(e) => e.stopPropagation()}

@@ -82,8 +82,8 @@ export const CreateAuctionForm = () => {
   const imageList = useMemo(() => {
     const urlImages = formState.imageUrls
       .split(/[\n,]+/)
-      .map((url) => url.trim())
-      .filter(Boolean);
+      .map((url: string) => url.trim())
+      .filter((url: string) => Boolean(url));
     // Combine uploaded images and URL images, uploaded images first
     return [...uploadedImages, ...urlImages];
   }, [formState.imageUrls, uploadedImages]);
@@ -420,7 +420,7 @@ export const CreateAuctionForm = () => {
               color: 'var(--foreground)'
             }}
           >
-            {categories.map((category) => (
+            {categories.map((category: AuctionCategory) => (
               <option key={category} value={category}>
                 {category}
               </option>
@@ -524,7 +524,7 @@ export const CreateAuctionForm = () => {
                   color: 'var(--foreground)'
                 }}
               >
-                {DURATION_PRESETS.map((hours) => (
+                {DURATION_PRESETS.map((hours: number) => (
                   <option key={hours} value={hours}>
                     {hours}h
                   </option>

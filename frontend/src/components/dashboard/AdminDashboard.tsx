@@ -37,7 +37,7 @@ export const AdminDashboard = ({
   return (
     <div className="space-y-8">
       <section className="grid gap-4 md:grid-cols-3">
-        {metricCards.map((metric) => (
+        {metricCards.map((metric: { key: string; label: string; color: string }) => (
           <div
             key={metric.key}
             className="rounded-2xl border p-5 shadow-lg"
@@ -80,7 +80,7 @@ export const AdminDashboard = ({
               </tr>
             </thead>
             <tbody className="divide-y divide-border/50">
-              {recentAuctions.map((auction) => (
+              {recentAuctions.map((auction: Auction) => (
                 <tr key={auction._id} className="hover:bg-border/20">
                   <td className="px-4 py-3" style={{ color: 'var(--foreground)' }}>{auction.title}</td>
                   <td className="px-4 py-3" style={{ color: 'var(--muted-foreground)' }}>

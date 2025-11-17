@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import { Auction, Bid } from "../../lib/types";
 import { format } from "date-fns";
 import { useSocketContext } from "../../context/SocketContext";
+import { extractUserId } from "../../lib/userIdUtils";
 
 interface SellerDashboardProps {
   listings: (Auction & { bidCount?: number })[];
@@ -78,7 +79,7 @@ export const SellerDashboard = ({
               </tr>
             </thead>
             <tbody className="divide-y divide-border/50">
-              {listings.map((item) => {
+              {listings.map((item: Auction & { bidCount?: number }) => {
                 const currentBidderName =
                   typeof item.currentBidder === "object"
                     ? item.currentBidder.username
@@ -94,8 +95,7 @@ export const SellerDashboard = ({
                         </span>
                         {currentBidderName && typeof item.currentBidder === "object" && item.currentBidder && (
                           (() => {
-                            const bidderId = (item.currentBidder as { id?: string; _id?: string }).id || 
-                                            (item.currentBidder as { id?: string; _id?: string })._id;
+                            const bidderId = extractUserId(item.currentBidder);
                             return bidderId ? (
                               <span className="text-xs" style={{ color: 'var(--muted-foreground)' }}>
                                 by{" "}
@@ -148,7 +148,7 @@ export const SellerDashboard = ({
               No bids received yet. Share your listings to attract bidders.
             </p>
           )}
-          {activeBids.map((bid) => (
+          {activeBids.map((bid: Bid) => (
             <div
               key={bid._id}
               className="rounded-lg border p-3"
@@ -157,8 +157,7 @@ export const SellerDashboard = ({
               <p className="text-sm" style={{ color: 'var(--foreground)' }}>
                 {typeof bid.bidder === "object" && bid.bidder ? (
                   (() => {
-                    const bidderId = (bid.bidder as { id?: string; _id?: string }).id || 
-                                    (bid.bidder as { id?: string; _id?: string })._id;
+                    const bidderId = extractUserId(bid.bidder);
                     const username = bid.bidder.username || "Bidder";
                     return bidderId ? (
                       <>

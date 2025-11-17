@@ -26,7 +26,7 @@ export const ImageGallery = ({ images, title }: ImageGalleryProps) => {
     setLoadedImages((prev) => new Set(prev).add(imageSrc));
   };
   
-  const validImages = images.filter((img) => img && !imageErrors.has(img));
+  const validImages = images.filter((img: string) => img && !imageErrors.has(img));
   
   // Helper to check if image is from localhost (needs unoptimized)
   const isLocalhostImage = (src: string) => {
@@ -140,7 +140,7 @@ export const ImageGallery = ({ images, title }: ImageGalleryProps) => {
         {/* Thumbnail Strip */}
         {validImages.length > 1 && (
           <div className="grid grid-cols-4 gap-2 sm:grid-cols-6 lg:grid-cols-8">
-            {validImages.slice(0, 8).map((image, index) => {
+            {validImages.slice(0, 8).map((image: string, index: number) => {
               const originalIndex = images.indexOf(image);
               return (
                 <div
@@ -289,7 +289,7 @@ export const ImageGallery = ({ images, title }: ImageGalleryProps) => {
           {/* Thumbnail Strip at Bottom */}
           {validImages.length > 1 && (
             <div className="absolute bottom-16 left-1/2 flex max-w-[90vw] -translate-x-1/2 gap-2 overflow-x-auto pb-2">
-              {validImages.map((image, index) => {
+              {validImages.map((image: string, index: number) => {
                 const originalIndex = images.indexOf(image);
                 const isSelected = selectedIndex !== null && images[selectedIndex] === image;
                 return (

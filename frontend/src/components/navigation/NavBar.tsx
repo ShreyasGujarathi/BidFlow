@@ -31,7 +31,7 @@ export const NavBar = () => {
 
   const visibleItems = useMemo(() => {
     const items = getNavItems(user?.id);
-    return items.filter((item) => {
+    return items.filter((item: { href: string; label: string }) => {
       if (item.href === "/admin" && user?.role !== "admin") return false;
       return true;
     });
@@ -46,7 +46,7 @@ export const NavBar = () => {
           : "items-center text-sm font-medium"
       )}
     >
-      {visibleItems.map((item) => {
+      {visibleItems.map((item: { href: string; label: string }) => {
         const isActive =
           pathname === item.href ||
           (item.href !== "/" && pathname.startsWith(item.href));

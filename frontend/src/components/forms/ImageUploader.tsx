@@ -33,14 +33,14 @@ export const ImageUploader = ({
       const fileArray = Array.from(files);
       // Validate file types
       const invalidFiles = fileArray.filter(
-        (file) => !file.type.startsWith("image/")
+        (file: File) => !file.type.startsWith("image/")
       );
       if (invalidFiles.length > 0) {
         throw new Error("Only image files are allowed.");
       }
 
       // Validate file sizes (10MB max)
-      const largeFiles = fileArray.filter((file) => file.size > 10 * 1024 * 1024);
+      const largeFiles = fileArray.filter((file: File) => file.size > 10 * 1024 * 1024);
       if (largeFiles.length > 0) {
         throw new Error("File size must be less than 10MB.");
       }
@@ -172,7 +172,7 @@ export const ImageUploader = ({
             Images ({images.length}/10)
           </p>
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
-            {images.map((url, index) => (
+            {images.map((url: string, index: number) => (
               <div
                 key={`${url}-${index}`}
                 className="group relative aspect-square overflow-hidden rounded-xl border"

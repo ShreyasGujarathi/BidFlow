@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { formatDistanceToNow } from "date-fns";
 import { Bid } from "../../lib/types";
+import { extractUserId } from "../../lib/userIdUtils";
 
 interface BidFeedProps {
   bids: Bid[];
@@ -26,7 +27,7 @@ export const BidFeed = ({ bids }: BidFeedProps) => {
         boxShadow: 'var(--shadow-soft)',
       }}
     >
-      {bids.map((bid) => (
+      {bids.map((bid: Bid) => (
         <li
           key={bid._id}
           className="flex items-center justify-between rounded-lg border px-3 py-2 text-sm"
@@ -38,8 +39,7 @@ export const BidFeed = ({ bids }: BidFeedProps) => {
           <div>
             {typeof bid.bidder === "object" && bid.bidder ? (
               (() => {
-                const bidderId = (bid.bidder as { id?: string; _id?: string }).id || 
-                                (bid.bidder as { id?: string; _id?: string })._id;
+                const bidderId = extractUserId(bid.bidder);
                 return bidderId ? (
                   <Link
                     href={`/users/${bidderId}`}

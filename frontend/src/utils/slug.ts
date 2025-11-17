@@ -12,11 +12,17 @@ export const generateSlug = (text: string): string => {
     .replace(/-+$/, "");
 };
 
+import { AuctionReference } from "../lib/types";
+
 /**
  * Creates an auction URL from auction data
  */
-export const getAuctionUrl = (auction: { _id: string; slug: string; title: string }): string => {
-  const slug = auction.slug || generateSlug(auction.title);
+export const getAuctionUrl = (auction: AuctionReference | { _id: string; slug?: string; title?: string }): string => {
+  const slug = auction.slug || (auction.title ? generateSlug(auction.title) : "");
+  if (!slug) {
+    // Fallback to ID-only if no slug or title
+    return `/auctions/${auction._id}`;
+  }
   return `/auctions/${slug}-${auction._id}`;
 };
 

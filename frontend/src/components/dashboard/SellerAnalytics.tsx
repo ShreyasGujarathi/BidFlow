@@ -41,7 +41,7 @@ const COLORS = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444'];
 
 export const SellerAnalytics = ({ analytics }: SellerAnalyticsProps) => {
   // Format revenue timeline for chart
-  const revenueData = analytics.revenueTimeline.map((item) => ({
+  const revenueData = analytics.revenueTimeline.map((item: { date: string; revenue: number }) => ({
     date: format(new Date(item.date), 'MMM d'),
     revenue: item.revenue,
   }));
@@ -52,7 +52,7 @@ export const SellerAnalytics = ({ analytics }: SellerAnalyticsProps) => {
     { name: 'Live', value: analytics.statusBreakdown.live, color: '#10b981' },
     { name: 'Completed', value: analytics.statusBreakdown.completed, color: '#3b82f6' },
     { name: 'Cancelled', value: analytics.statusBreakdown.cancelled, color: '#ef4444' },
-  ].filter((item) => item.value > 0);
+  ].filter((item: { name: string; value: number; color: string }) => item.value > 0);
 
   // Metrics cards
   const metrics = [
@@ -106,7 +106,7 @@ export const SellerAnalytics = ({ analytics }: SellerAnalyticsProps) => {
     <div className="space-y-6">
       {/* Metrics Cards */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {metrics.map((metric, index) => (
+        {metrics.map((metric: { label: string; value: string | number; icon: React.ReactNode; color: string; bgColor: string }, index: number) => (
           <div
             key={index}
             className="rounded-2xl border p-6"
@@ -185,7 +185,7 @@ export const SellerAnalytics = ({ analytics }: SellerAnalyticsProps) => {
                   fill="#8884d8"
                   dataKey="value"
                 >
-                  {statusData.map((entry, index) => (
+                  {statusData.map((entry: { name: string; value: number; color: string }, index: number) => (
                     <Cell key={`cell-${index}`} fill={entry.color} />
                   ))}
                 </Pie>

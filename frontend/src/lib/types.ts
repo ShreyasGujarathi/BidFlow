@@ -73,3 +73,17 @@ export interface ApiResponse<T> {
   message?: string;
 }
 
+// Helper types for auction references (used in URLs and partial data)
+export interface AuctionReference {
+  _id: string;
+  slug: string;
+  title?: string;
+}
+
+// Helper type for user ID extraction
+export interface UserIdReference {
+  _id?: string | { toString?: () => string };
+  id?: string;
+  [key: string]: unknown;
+}
+

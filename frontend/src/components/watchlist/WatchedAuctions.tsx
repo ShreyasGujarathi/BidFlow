@@ -138,10 +138,10 @@ export const WatchedAuctions = () => {
 
   // Filter out items where auction is not populated or is a string
   const validWatchlist = watchlist.filter(
-    (item) => typeof item.auction === "object" && item.auction !== null
+    (item: { auction: string | Auction }) => typeof item.auction === "object" && item.auction !== null
   );
 
-  const auctions = validWatchlist.map((item) => item.auction as Auction);
+  const auctions: Auction[] = validWatchlist.map((item: { auction: Auction }) => item.auction);
 
   if (!user) {
     return (
@@ -207,7 +207,7 @@ export const WatchedAuctions = () => {
 
   return (
     <div className="space-y-4">
-      {auctions.map((auction) => (
+      {auctions.map((auction: Auction) => (
         <WatchedAuctionItem
           key={auction._id}
           auction={auction}

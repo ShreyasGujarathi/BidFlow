@@ -7,6 +7,7 @@ import { getAuctionUrl } from "../../utils/slug";
 import { formatDistanceToNow, format } from "date-fns";
 import { useCountdown } from "../../hooks/useCountdown";
 import { useSocketContext } from "../../context/SocketContext";
+import { extractUserId } from "../../lib/userIdUtils";
 
 interface BuyerDashboardProps {
   activeBids: Bid[];
@@ -26,8 +27,10 @@ const ActiveBidCard = ({ bid, auction, serverTimeOffset }: ActiveBidCardProps) =
   const isLive = auction.status === "live";
   
   // Determine if user is winning (their highest bid matches current highest bid)
-  const isUserWinning = auction.currentBidder && typeof auction.currentBidder === "object"
-    ? String(auction.currentBidder.id || auction.currentBidder._id) === String(bid.bidder.id)
+  const currentBidderId = extractUserId(auction.currentBidder);
+  const bidderId = extractUserId(bid.bidder);
+  const isUserWinning = currentBidderId && bidderId
+    ? String(currentBidderId).trim() === String(bidderId).trim()
     : false;
   
   const status = isUserWinning ? "Winning" : "Outbid";
@@ -185,13 +188,13 @@ export const BuyerDashboard = ({
             {(() => {
               // Additional safeguard: filter to ensure only one bid per auction
               const seenAuctions = new Set<string>();
-              const uniqueBids = activeBids.filter((bid) => {
+              const uniqueBids = activeBids.filter((bid: Bid) => {
                 const auction = typeof bid.auction === "object" ? bid.auction : null;
                 if (!auction || !auction._id) return false;
                 
                 const auctionId = typeof auction._id === "string" 
                   ? auction._id 
-                  : auction._id.toString();
+                  : String(auction._id);
                 
                 if (seenAuctions.has(auctionId)) {
                   return false; // Skip duplicate
@@ -200,13 +203,13 @@ export const BuyerDashboard = ({
                 return true;
               });
 
-              return uniqueBids.map((bid) => {
+              return uniqueBids.map((bid: Bid) => {
                 const auction = typeof bid.auction === "object" ? bid.auction : null;
                 if (!auction) return null;
                 
                 const auctionId = typeof auction._id === "string" 
                   ? auction._id 
-                  : auction._id.toString();
+                  : String(auction._id);
                 
                 // Use auction ID as key since we now have one card per auction
                 return (
@@ -278,7 +281,7 @@ export const BuyerDashboard = ({
           </div>
         ) : (
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {wonAuctions.map((auction) => (
+            {wonAuctions.map((auction: Auction) => (
               <Link
                 key={auction._id}
                 href={getAuctionUrl(auction)}
