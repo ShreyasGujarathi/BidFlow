@@ -108,7 +108,7 @@ export default function HomePage() {
     };
   }, [joinedRoomsKey, joinAuction, leaveAuction]);
 
-  const filteredAuctions = auctions.filter((auction: Auction) => {
+  const filteredAuctions: Auction[] = auctions.filter((auction: Auction) => {
     const now = new Date();
     const endTime = new Date(auction.endTime);
     return auction.status === "live" && endTime > now;

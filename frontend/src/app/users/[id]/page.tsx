@@ -288,7 +288,7 @@ export default function UserProfilePage() {
             Recent Auctions Created
           </h2>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {profile.recentAuctions.map((auction) => (
+            {profile.recentAuctions.map((auction: { _id: string; slug: string; [key: string]: unknown }) => (
               <Link
                 key={auction._id}
                 href={getAuctionUrl(auction as { slug: string; _id: string })}
@@ -352,7 +352,7 @@ export default function UserProfilePage() {
         >
           <h2 className="mb-4 text-xl font-semibold" style={{ color: 'var(--foreground)' }}>Recent Wins</h2>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {profile.recentWins.map((auction) => (
+            {profile.recentWins.map((auction: { _id: string; slug: string; [key: string]: unknown }) => (
               <Link
                 key={auction._id}
                 href={getAuctionUrl(auction as { slug: string; _id: string })}
@@ -434,7 +434,7 @@ export default function UserProfilePage() {
         >
           <h2 className="mb-4 text-xl font-semibold" style={{ color: 'var(--foreground)' }}>Recent Ratings</h2>
           <div className="space-y-4">
-            {profile.recentRatings.map((ratingItem) => (
+            {profile.recentRatings.map((ratingItem: { _id: string; rating: number; comment?: string; ratedBy: { username: string; [key: string]: unknown }; createdAt: string; [key: string]: unknown }) => (
               <div
                 key={ratingItem._id}
                 className="rounded-lg border p-4"
