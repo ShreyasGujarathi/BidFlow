@@ -36,7 +36,7 @@ export interface Auction {
   status: AuctionStatus;
   startTime: string;
   endTime: string;
-  imageUrls: string[];
+  imageUrls?: string[];
   createdAt: string;
   updatedAt: string;
 }
@@ -78,6 +78,7 @@ export interface AuctionReference {
   _id: string;
   slug: string;
   title?: string;
+  imageUrls?: string[];
 }
 
 // Helper type for user ID extraction

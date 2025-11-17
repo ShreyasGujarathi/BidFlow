@@ -288,7 +288,7 @@ export default function UserProfilePage() {
             Recent Auctions Created
           </h2>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {profile.recentAuctions.map((auction: { _id: string; slug: string; [key: string]: unknown }) => (
+            {profile.recentAuctions.map((auction: { _id: string; slug: string; title: string; status: string; currentPrice: number; endTime: string; imageUrls?: string[] }) => (
               <Link
                 key={auction._id}
                 href={getAuctionUrl(auction)}
@@ -352,7 +352,7 @@ export default function UserProfilePage() {
         >
           <h2 className="mb-4 text-xl font-semibold" style={{ color: 'var(--foreground)' }}>Recent Wins</h2>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {profile.recentWins.map((auction: { _id: string; slug: string; [key: string]: unknown }) => (
+            {profile.recentWins.map((auction: { _id: string; slug: string; title: string; currentPrice: number; endTime: string; imageUrls?: string[] }) => (
               <Link
                 key={auction._id}
                 href={getAuctionUrl(auction)}
@@ -434,7 +434,7 @@ export default function UserProfilePage() {
         >
           <h2 className="mb-4 text-xl font-semibold" style={{ color: 'var(--foreground)' }}>Recent Ratings</h2>
           <div className="space-y-4">
-            {profile.recentRatings.map((ratingItem: { _id: string; rating: number; comment?: string; ratedBy: { username: string; [key: string]: unknown }; createdAt: string; [key: string]: unknown }) => (
+            {profile.recentRatings.map((ratingItem: { _id: string; rating: number; comment?: string; ratedBy: { username: string; avatarUrl?: string | null }; createdAt: string }) => (
               <div
                 key={ratingItem._id}
                 className="rounded-lg border p-4"
@@ -448,7 +448,7 @@ export default function UserProfilePage() {
                     {typeof ratingItem.ratedBy === "object" && ratingItem.ratedBy.avatarUrl ? (
                       <div className="relative h-10 w-10 overflow-hidden rounded-full border" style={{ borderColor: 'var(--border)' }}>
                         <Image
-                          src={ratingItem.ratedBy.avatarUrl}
+                          src={ratingItem.ratedBy.avatarUrl || ''}
                           alt={ratingItem.ratedBy.username}
                           fill
                           className="object-cover"

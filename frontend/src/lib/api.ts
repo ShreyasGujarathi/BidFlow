@@ -391,7 +391,7 @@ export interface UserProfile {
     currentPrice: number;
     endTime: string;
     slug: string;
-    imageUrls: string[];
+    imageUrls?: string[];
   }>;
   recentWins: Array<{
     _id: string;
@@ -399,7 +399,7 @@ export interface UserProfile {
     currentPrice: number;
     endTime: string;
     slug: string;
-    imageUrls: string[];
+    imageUrls?: string[];
   }>;
   recentRatings: Array<{
     _id: string;
