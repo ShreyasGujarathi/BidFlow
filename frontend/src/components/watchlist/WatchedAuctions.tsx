@@ -127,7 +127,7 @@ const WatchedAuctionItem = ({ auction, serverTimeOffset, onWatchlistChange }: Wa
 export const WatchedAuctions = () => {
   const { token, user } = useAuth();
   const { serverTimeOffset } = useSocketContext();
-  const { data: watchlist = [], error, isLoading } = useWatchlist(token);
+  const { data: watchlist = [], error, isLoading } = useWatchlist(token ?? undefined);
 
   // Refresh watchlist when items are removed
   const handleWatchlistChange = () => {

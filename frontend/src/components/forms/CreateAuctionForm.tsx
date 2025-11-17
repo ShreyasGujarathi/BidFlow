@@ -69,6 +69,7 @@ export const CreateAuctionForm = () => {
       Record<
         | "title"
         | "description"
+        | "category"
         | "startingPrice"
         | "minimumIncrement"
         | "startTime"
