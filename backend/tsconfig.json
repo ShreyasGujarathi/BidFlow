@@ -7,7 +7,7 @@
     "target": "es2020",
     "lib": ["es2020"],
     
-    "types": ["node", "express"],
+    "types": ["node"],
 
     "typeRoots": [
       "./node_modules/@types",
